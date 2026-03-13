@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Teknologi Digital Nasional Meet
 
-## Getting Started
+Aplikasi rapat video generasi baru yang aman, gratis, dan tanpa batas, dibangun untuk para profesional di seluruh Indonesia.
 
-First, run the development server:
+Aplikasi ini menggunakan teknologi Next.js App Router, Tailwind CSS untuk styling UI modern, Framer Motion untuk animasi, dan `@jitsi/react-sdk` untuk sistem webRTC konferensi video yang keamanannya terjamin.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Memulai secara Lokal
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Untuk menjalankan aplikasi ini secara lokal di komputer Anda:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Pastikan Node.js sudah terinstal.
+2. Jalankan perintah instalasi dependensi (jika belum):
+   ```bash
+   npm install
+   ```
+3. Mulai server pengembangan:
+   ```bash
+   npm run dev
+   ```
+4. Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat hasilnya.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Panduan Hosting ke GitHub & Verel
 
-## Learn More
+Aplikasi ini siap untuk dipublikasikan secara online agar bisa diakses oleh siapa saja.
 
-To learn more about Next.js, take a look at the following resources:
+### Langkah 1: Push ke GitHub
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Buka akun GitHub Anda dan buat repository baru (kosong, tanpa README/gitignore).
+2. Di terminal Anda, jalankan perintah berikut secara berurutan:
+   ```bash
+   git remote add origin https://github.com/USERNAME_ANDA/NAMA_REPO_ANDA.git
+   git branch -M main
+   git push -u origin main
+   ```
+*(Ganti URL di atas dengan URL repository Anda yang sebenarnya).*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Langkah 2: Deploy ke Vercel
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vercel adalah platform hosting terbaik untuk framework Next.js.
+1. Kunjungi [Vercel](https://vercel.com/) dan login dengan akun GitHub Anda.
+2. Klik tombol **Add New...** > **Project**.
+3. Pilih repository GitHub "Teknologi Digital Nasional Meet" yang baru saja Anda push.
+4. Klik **Deploy**.
+5. Tunggu proses build selesai (sekitar 1-2 menit), dan Vercel akan memberikan Anda sebuah link URL publik (misal: `https://nama-web.vercel.app`) yang bisa Anda bagikan ke semua orang!
