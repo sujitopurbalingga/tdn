@@ -97,20 +97,25 @@ export default function MeetingRoom() {
             startWithVideoMuted: false,
             disableModeratorIndicator: true,
             disableInviteFunctions: true,
-            prejoinPageEnabled: false,
+            prejoinPageEnabled: false, // Bypass prejoin screen completley
             defaultLanguage: 'id',
             enableWelcomePage: false,
-            requireDisplayName: true,
+            requireDisplayName: false, // Important to prevent prompt
             resolution: 720,
             constraints: {
                video: { height: { ideal: 720, max: 720, min: 240 } }
             },
             p2p: { enabled: true, preferH264: true },
-            // Menambahkan config untuk mencegah menunggu moderator
+            // Auto bypass lobby/moderator
             disableDeepLinking: true,
             testing: {
                noAutoPlayVideo: false
-            }
+            },
+            // The key configuration to bypass the "waiting for host" screen
+            disable1On1Mode: false,
+            hiddenDomain: 'recorder.meet.jit.si',
+            enableLobbyChat: false,
+            doNotStoreRoom: true
           }}
           interfaceConfigOverwrite={{
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
