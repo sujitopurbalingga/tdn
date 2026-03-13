@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Loader2, Video, LogOut, Share2, Copy, CheckCircle2 } from "lucide-react";
+import { Video, LogOut, Copy, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Jitsi is a client-side only library, it does not support SSR
@@ -35,13 +35,32 @@ export default function MeetingRoom() {
   const [isClient, setIsClient] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
+  const [meetingDetails, setMeetingDetails] = useState({ hostName: "", title: "" });
+
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    // Load meeting details if we are the creator who just filled the form
+    try {
+      const stored = localStorage.getItem(`tdn_meet_${id}`);
+      if (stored) {
+        setMeetingDetails(JSON.parse(stored));
+        // Remove it so it doesn't pollute local storage permanently
+        localStorage.removeItem(`tdn_meet_${id}`);
+      }
+    } catch (e) {
+      console.error("Could not load meeting details", e);
+    }
+  }, [id]);
 
   const copyInviteLink = () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
+      const link = window.location.href;
+      const title = meetingDetails.title || "Rapat Video Teknologi Digital Nasional";
+      const host = meetingDetails.hostName ? `\nHost: *${meetingDetails.hostName}*` : "";
+      
+      const inviteText = `Panggilan Rapat: *${title}*${host}\n\nSilakan bergabung ke ruang rapat melalui tautan berikut:\n${link}\n\n_Dibuat dengan Aplikasi TDN Meet_`;
+      
+      navigator.clipboard.writeText(inviteText);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 3000);
     }
@@ -61,8 +80,9 @@ export default function MeetingRoom() {
             <span className="font-semibold text-white tracking-tight leading-tight truncate">Teknologi Digital Nasional</span>
             <div className="flex items-center gap-2">
               <span className="text-blue-400 text-[10px] sm:text-xs font-semibold tracking-widest uppercase">Meet</span>
-              <span className="w-1 h-1 rounded-full bg-gray-600"></span>
-              <span className="text-gray-400 text-xs truncate">Room: {id}</span>
+              <span className="text-gray-400 text-xs truncate">
+                {meetingDetails.title || `Room: ${id}`}
+              </span>
             </div>
           </div>
         </div>
@@ -120,33 +140,47 @@ export default function MeetingRoom() {
           interfaceConfigOverwrite={{
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
             SHOW_CHROME_EXTENSION_BANNER: false,
+            // Fix branding / watermarks
+            DEFAULT_LOGO_URL: '',
+            DEFAULT_WELCOME_PAGE_LOGO_URL: '',
+            JITSI_WATERMARK_LINK: '',
+            BRAND_WATERMARK_LINK: '',
             SHOW_JITSI_WATERMARK: false,
             SHOW_WATERMARK_FOR_GUESTS: false,
             SHOW_BRAND_WATERMARK: false,
+            HIDE_INVITE_MORE_HEADER: true,
+            HIDE_KICK_BUTTON_FOR_GUESTS: true,
             DEFAULT_BACKGROUND: '#0a0f1c',
             MOBILE_APP_PROMO: false,
             TOOLBAR_BUTTONS: [
                 'microphone', 'camera', 'closedcaptions', 'desktop', 'embedmeeting', 'fullscreen',
-                'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+                'fodeviceselection', 'hangup', 'chat', 'recording',
                 'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-                'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-                'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security'
+                'videoquality', 'filmstrip', 'stats', 'shortcuts',
+                'tileview', 'videobackgroundblur', 'mute-everyone', 'security'
             ],
             LANG_DETECTION: true,
+            DISPLAY_WELCOME_PAGE_CONTENT: false,
+            DISPLAY_WELCOME_PAGE_TOOLBAR_ADDITIONAL_CONTENT: false
           }}
           userInfo={{
-            displayName: '',
+            displayName: meetingDetails.hostName || '',
             email: ''
-          }}
-          onApiReady={(externalApi) => {
-            externalApi.addListener('videoConferenceLeft', () => {
-              router.push("/");
-            });
           }}
           getIFrameRef={(iframeRef) => {
             iframeRef.style.height = '100%';
             iframeRef.style.width = '100%';
             iframeRef.style.border = 'none';
+          }}
+          onApiReady={(externalApi) => {
+            // Apply subject text to Jitsi meeting if a custom title exists
+            if (meetingDetails.title) {
+              externalApi.executeCommand('subject', meetingDetails.title);
+            }
+            
+            externalApi.addListener('videoConferenceLeft', () => {
+              router.push("/");
+            });
           }}
         />
 
