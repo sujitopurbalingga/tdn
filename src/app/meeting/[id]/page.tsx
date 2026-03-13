@@ -36,6 +36,7 @@ export default function MeetingRoom() {
   const [isCopied, setIsCopied] = useState(false);
 
   const [meetingDetails, setMeetingDetails] = useState({ hostName: "", title: "" });
+  const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -44,6 +45,7 @@ export default function MeetingRoom() {
       const stored = localStorage.getItem(`tdn_meet_${id}`);
       if (stored) {
         setMeetingDetails(JSON.parse(stored));
+        setIsHost(true);
         // Remove it so it doesn't pollute local storage permanently
         localStorage.removeItem(`tdn_meet_${id}`);
       }
@@ -117,10 +119,10 @@ export default function MeetingRoom() {
             startWithVideoMuted: false,
             disableModeratorIndicator: true,
             disableInviteFunctions: true,
-            prejoinPageEnabled: false, // Bypass prejoin screen completley
+            prejoinPageEnabled: !isHost, // Bypass prejoin screen completley ONLY if they are the host creating it. Else they must enter their name.
             defaultLanguage: 'id',
             enableWelcomePage: false,
-            requireDisplayName: false, // Important to prevent prompt
+            requireDisplayName: !isHost, // Important to prompt participants for names if they aren't the host
             resolution: 720,
             constraints: {
                video: { height: { ideal: 720, max: 720, min: 240 } }
