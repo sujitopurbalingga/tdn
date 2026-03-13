@@ -97,7 +97,7 @@ export default function MeetingRoom() {
             startWithVideoMuted: false,
             disableModeratorIndicator: true,
             disableInviteFunctions: true,
-            prejoinPageEnabled: true,
+            prejoinPageEnabled: false,
             defaultLanguage: 'id',
             enableWelcomePage: false,
             requireDisplayName: true,
@@ -106,6 +106,11 @@ export default function MeetingRoom() {
                video: { height: { ideal: 720, max: 720, min: 240 } }
             },
             p2p: { enabled: true, preferH264: true },
+            // Menambahkan config untuk mencegah menunggu moderator
+            disableDeepLinking: true,
+            testing: {
+               noAutoPlayVideo: false
+            }
           }}
           interfaceConfigOverwrite={{
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
