@@ -125,7 +125,8 @@ export default function MeetingRoom() {
             LANG_DETECTION: true,
           }}
           userInfo={{
-            displayName: ''
+            displayName: '',
+            email: ''
           }}
           onApiReady={(externalApi) => {
             externalApi.addListener('videoConferenceLeft', () => {
